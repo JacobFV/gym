@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../mech"">Ivy Mech</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../vision"">Ivy Vision</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../robot"">Ivy Robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory"">Ivy Memory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gym"">Ivy Gym</a></li>
 </ul>
 
@@ -227,24 +228,28 @@ This means all environments simultaneously support:
 Jax, Tensorflow, PyTorch, MXNet, and Numpy.</p>
 <p><strong>A Family of Libraries</strong></p>
 <p>Ivy gym is one library in a family of Ivy libraries.
-There are also Ivy libraries for mechanics, 3D vision, and robotics.
+There are also Ivy libraries for mechanics, 3D vision, robotics, and differentiable memory.
 Click on the icons below for their respective github pages.</p>
 <div style="display: block;">
-    <img width="10%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
+    <img width="8%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
     <a href="https://github.com/ivy-dl/mech">
-        <img width="16%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_mech.png">
+        <img width="15%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_mech.png">
     </a>
-    <img width="3.2%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
+    <img width="2%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
     <a href="https://github.com/ivy-dl/vision">
-        <img width="16%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_vision.png">
+        <img width="15%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_vision.png">
     </a>
-    <img width="3.2%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
+    <img width="2%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
     <a href="https://github.com/ivy-dl/robot">
-        <img width="16%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_robot.png">
+        <img width="15%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_robot.png">
     </a>
-    <img width="3.2%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
+    <img width="2%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
+    <a href="https://github.com/ivy-dl/memory">
+        <img width="15%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_memory.png">
+    </a>
+    <img width="2%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/empty.png">
     <a href="https://github.com/ivy-dl/gym">
-        <img width="16%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_gym.png">
+        <img width="15%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/ivy_gym.png">
     </a>
 </div>
 <br clear="all" />
@@ -352,6 +357,17 @@ or you would like to implement your own custom task,
 then we are very happy to accept pull requests!</p>
 <p>We look forward to working with the community on expanding and improving the Ivy gym library.</p>
 </div>
+<div class="section" id="citation">
+<h1>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">lenton2021ivy</span><span class="p">,</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">Ivy</span><span class="p">:</span> <span class="n">Templated</span> <span class="n">Deep</span> <span class="n">Learning</span> <span class="k">for</span> <span class="n">Inter</span><span class="o">-</span><span class="n">Framework</span> <span class="n">Portability</span><span class="p">},</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Lenton</span><span class="p">,</span> <span class="n">Daniel</span> <span class="ow">and</span> <span class="n">Pardo</span><span class="p">,</span> <span class="n">Fabio</span> <span class="ow">and</span> <span class="n">Falck</span><span class="p">,</span> <span class="n">Fabian</span> <span class="ow">and</span> <span class="n">James</span><span class="p">,</span> <span class="n">Stephen</span> <span class="ow">and</span> <span class="n">Clark</span><span class="p">,</span> <span class="n">Ronald</span><span class="p">},</span>
+  <span class="n">journal</span><span class="o">=</span><span class="p">{</span><span class="n">arXiv</span> <span class="n">preprint</span> <span class="n">arXiv</span><span class="p">:</span><span class="mf">2102.02886</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2021</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="documentation-tree">
 <h1>Documentation Tree<a class="headerlink" href="#documentation-tree" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
@@ -386,6 +402,7 @@ then we are very happy to accept pull requests!</p>
 <li class="toctree-l1"><a class="reference internal" href="../mech"">Ivy Mech</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../vision"">Ivy Vision</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../robot"">Ivy Robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory"">Ivy Memory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gym"">Ivy Gym</a></li>
 </ul>
 </div>
