@@ -267,22 +267,24 @@ and read the “Run Through” section below which explains this script.</p>
 <p>The different environemnts can be visualized via a simple script,
 which executes random motion for 250 steps in one of the environments.
 The script is available in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/demos">demos</a> folder, as file <code class="docutils literal notranslate"><span class="pre">run_through.py</span></code>.
-First, we select a random backend framework <code class="docutils literal notranslate"><span class="pre">f</span></code> to use for the examples, from the options
-<code class="docutils literal notranslate"><span class="pre">ivy.jax</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.tensorflow</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.torch</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.mxnd</span></code> or <code class="docutils literal notranslate"><span class="pre">ivy.numpy</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ivy_demo_utils.framework_utils</span> <span class="kn">import</span> <span class="n">choose_random_framework</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">choose_random_framework</span><span class="p">()</span>
+First, we select a random backend framework to use for the examples, from the options
+<code class="docutils literal notranslate"><span class="pre">ivy.jax</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.tensorflow</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.torch</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.mxnd</span></code> or <code class="docutils literal notranslate"><span class="pre">ivy.numpy</span></code>,
+and use this to set the ivy backend framework.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ivy</span>
+<span class="kn">from</span> <span class="nn">ivy_demo_utils.framework_utils</span> <span class="kn">import</span> <span class="n">choose_random_framework</span>
+<span class="n">ivy</span><span class="o">.</span><span class="n">set_framework</span><span class="p">(</span><span class="n">choose_random_framework</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>We then select an environment to use and execute 250 random actions,
 while rendering the environment after each step.</p>
 <p>By default, the demos all use the <code class="docutils literal notranslate"><span class="pre">CartPole</span></code> environment, but this can be changed using the <code class="docutils literal notranslate"><span class="pre">--env</span></code> argument,
 choosing from the options <code class="docutils literal notranslate"><span class="pre">CartPole</span></code>, <code class="docutils literal notranslate"><span class="pre">Pendulum</span></code>, <code class="docutils literal notranslate"><span class="pre">MountainCar</span></code>, <code class="docutils literal notranslate"><span class="pre">Reacher</span></code> or <code class="docutils literal notranslate"><span class="pre">Swimmer</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ivy_gym</span><span class="p">,</span> <span class="n">env_str</span><span class="p">)(</span><span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ivy_gym</span><span class="p">,</span> <span class="n">env_str</span><span class="p">)()</span>
 
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">ac_dim</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">250</span><span class="p">):</span>
-    <span class="n">ac</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">ac_dim</span><span class="p">,))</span>
+    <span class="n">ac</span> <span class="o">=</span> <span class="n">ivy</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">ac_dim</span><span class="p">,))</span>
     <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">ac</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 </pre></div>
