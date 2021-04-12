@@ -5,8 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Contents &mdash; Ivy Gym 1.0 documentation</title>
@@ -80,7 +79,7 @@
               
             
             
-              <p><span class="caption-text">Environments</span></p>
+              <p class="caption"><span class="caption-text">Environments</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cartpole.html">Cartpole</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mountain_car.html">Mountain car</a></li>
@@ -88,7 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="reacher.html">Reacher</a></li>
 <li class="toctree-l1"><a class="reference internal" href="swimmer.html">Swimmer</a></li>
 </ul>
-<p><span class="caption-text">Docs</span></p>
+<p class="caption"><span class="caption-text">Docs</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ivy"">Ivy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mech"">Ivy Mech</a></li>
@@ -199,7 +198,7 @@
     <a href="https://numpy.org">
         <img width="12%" style="float: left;" src="https://raw.githubusercontent.com/ivy-dl/ivy-dl.github.io/master/img/externally_linked/logos/supported/numpy_logo.png">
     </a>
-</div><section id="contents">
+</div><div class="section" id="contents">
 <h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="#overview">Overview</a></p></li>
@@ -207,8 +206,8 @@
 <li><p><a class="reference internal" href="#optimization-demos">Optimization Demos</a></p></li>
 <li><p><a class="reference internal" href="#get-involed">Get Involed</a></p></li>
 </ul>
-</section>
-<section id="overview">
+</div>
+<div class="section" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
 <p><strong>What is Ivy Gym?</strong></p>
 <p>Ivy Gym opens the door for intersectional research between supervised learning (SL), reinforcement learning (RL),
@@ -256,8 +255,8 @@ We suggest you start by running the script <code class="docutils literal notrans
 and read the “Run Through” section below which explains this script.</p>
 <p>For demos which optimize performance on the different tasks, we suggest you run either
 <code class="docutils literal notranslate"><span class="pre">optimize_trajectory.py</span></code> or <code class="docutils literal notranslate"><span class="pre">optimize_policy.py</span></code> in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/demos/optimization">optimization</a> demos folder.</p>
-</section>
-<section id="run-through">
+</div>
+<div class="section" id="run-through">
 <h1>Run Through<a class="headerlink" href="#run-through" title="Permalink to this headline">¶</a></h1>
 <p>The different environemnts can be visualized via a simple script,
 which executes random motion for 250 steps in one of the environments.
@@ -324,8 +323,8 @@ Reward is given for being close to the target, and negative reward is given for 
 Example trajectories are given below.</p>
 <p align="center">
     <img width="40%" style="display: block;" src='https://github.com/ivy-dl/ivy-dl.github.io/blob/master/img/externally_linked/ivy_gym/swimmer.gif?raw=true'>
-</p></section>
-<section id="optimization-demos">
+</p></div>
+<div class="section" id="optimization-demos">
 <h1>Optimization Demos<a class="headerlink" href="#optimization-demos" title="Permalink to this headline">¶</a></h1>
 <p>We provide two demo scripts which optimize performance on these tasks in a supervised manner,
 either via trajectory optimization or policy optimization.</p>
@@ -344,8 +343,8 @@ The optimization iteration is shown in the bottom right, along with the step in 
 The optimization iteration is shown in the bottom right, along with the step in the environment.</p>
 <p align="center">
     <img width="75%" style="display: block;" src='https://github.com/ivy-dl/ivy-dl.github.io/blob/master/img/externally_linked/ivy_gym/demo_b.gif?raw=true'>
-</p></section>
-<section id="get-involed">
+</p></div>
+<div class="section" id="get-involed">
 <h1>Get Involed<a class="headerlink" href="#get-involed" title="Permalink to this headline">¶</a></h1>
 <p>We hope the differentiable environments in this library are useful to a wide range of deep learning developers.
 However, there are many more tasks which could be implemented.</p>
@@ -353,8 +352,8 @@ However, there are many more tasks which could be implemented.</p>
 or you would like to implement your own custom task,
 then we are very happy to accept pull requests!</p>
 <p>We look forward to working with the community on expanding and improving the Ivy gym library.</p>
-</section>
-<section id="citation">
+</div>
+<div class="section" id="citation">
 <h1>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">lenton2021ivy</span><span class="p">,</span>
   <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">Ivy</span><span class="p">:</span> <span class="n">Templated</span> <span class="n">Deep</span> <span class="n">Learning</span> <span class="k">for</span> <span class="n">Inter</span><span class="o">-</span><span class="n">Framework</span> <span class="n">Portability</span><span class="p">},</span>
@@ -364,11 +363,11 @@ then we are very happy to accept pull requests!</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</section>
-<section id="documentation-tree">
+</div>
+<div class="section" id="documentation-tree">
 <h1>Documentation Tree<a class="headerlink" href="#documentation-tree" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p><span class="caption-text">Environments</span></p>
+<p class="caption"><span class="caption-text">Environments</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cartpole.html">Cartpole</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cartpole/CartPole.html">CartPole</a></li>
@@ -393,7 +392,7 @@ then we are very happy to accept pull requests!</p>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p><span class="caption-text">Docs</span></p>
+<p class="caption"><span class="caption-text">Docs</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ivy"">Ivy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../mech"">Ivy Mech</a></li>
@@ -403,7 +402,7 @@ then we are very happy to accept pull requests!</p>
 <li class="toctree-l1"><a class="reference internal" href="../gym"">Ivy Gym</a></li>
 </ul>
 </div>
-</section>
+</div>
 
 
            </div>
