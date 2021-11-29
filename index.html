@@ -250,17 +250,17 @@ Click on the icons below for their respective github pages.</p>
 <br/>
 <br/><p><strong>Quick Start</strong></p>
 <p>Ivy gym can be installed like so: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ivy-gym</span></code></p>
-<p>To quickly see the different environments provided, we suggest you check out the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/demos">demos</a>!
+<p>To quickly see the different environments provided, we suggest you check out the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/ivy_gym_demos">demos</a>!
 We suggest you start by running the script <code class="docutils literal notranslate"><span class="pre">run_through.py</span></code>,
 and read the “Run Through” section below which explains this script.</p>
 <p>For demos which optimize performance on the different tasks, we suggest you run either
-<code class="docutils literal notranslate"><span class="pre">optimize_trajectory.py</span></code> or <code class="docutils literal notranslate"><span class="pre">optimize_policy.py</span></code> in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/demos/optimization">optimization</a> demos folder.</p>
+<code class="docutils literal notranslate"><span class="pre">optimize_trajectory.py</span></code> or <code class="docutils literal notranslate"><span class="pre">optimize_policy.py</span></code> in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/ivy_gym_demos/optimization">optimization</a> demos folder.</p>
 </div>
 <div class="section" id="run-through">
 <h1>Run Through<a class="headerlink" href="#run-through" title="Permalink to this headline">¶</a></h1>
 <p>The different environemnts can be visualized via a simple script,
 which executes random motion for 250 steps in one of the environments.
-The script is available in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/demos">demos</a> folder, as file <code class="docutils literal notranslate"><span class="pre">run_through.py</span></code>.
+The script is available in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/ivy_gym_demos">demos</a> folder, as file <code class="docutils literal notranslate"><span class="pre">run_through.py</span></code>.
 First, we select a random backend framework to use for the examples, from the options
 <code class="docutils literal notranslate"><span class="pre">ivy.jax</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.tensorflow</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.torch</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.mxnet</span></code> or <code class="docutils literal notranslate"><span class="pre">ivy.numpy</span></code>,
 and use this to set the ivy backend framework.</p>
@@ -332,7 +332,7 @@ either via trajectory optimization or policy optimization.</p>
 whereas for policy optimization we train a policy network which is conditioned on the environment state,
 and the starting state is then randomized between training steps.</p>
 <p>Rather than presenting the code here, we show visualizations of the demos.
-The scripts for these demos can be found in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/demos/optimization">optimization</a> demos folder.</p>
+The scripts for these demos can be found in the <a class="reference external" href="https://github.com/ivy-dl/gym/tree/master/ivy_gym_demos/optimization">optimization</a> demos folder.</p>
 <p><strong>Trajectory Optimization</strong></p>
 <p>In this demo, we show trajectories on each of the five ivy gym environments during the course of trajectory optimization.
 The optimization iteration is shown in the bottom right, along with the step in the environment.</p>
