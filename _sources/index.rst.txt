@@ -380,11 +380,9 @@ Citation
       year={2021}
     }
 
-Documentation Tree
-------------------
-
 
 .. toctree::
+   :hidden:
    :maxdepth: -1
    :caption: Environments
 
@@ -397,6 +395,7 @@ Documentation Tree
 
 
 .. toctree::
+   :hidden:
    :maxdepth: -1
    :caption: Docs
 

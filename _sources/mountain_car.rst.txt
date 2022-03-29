@@ -9,6 +9,7 @@ Mountain car
 
 
 .. toctree::
+   :hidden:
    :maxdepth: -1
    :caption: Mountain car
 

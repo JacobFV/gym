@@ -9,6 +9,7 @@ Swimmer
 
 
 .. toctree::
+   :hidden:
    :maxdepth: -1
    :caption: Swimmer
 
