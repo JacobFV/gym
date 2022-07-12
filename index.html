@@ -276,11 +276,11 @@ and read the “Run Through” section below which explains this script.</p>
 which executes random motion for 250 steps in one of the environments.
 The script is available in the <a class="reference external" href="https://github.com/unifyai/gym/tree/master/ivy_gym_demos">demos</a> folder, as file <code class="docutils literal notranslate"><span class="pre">run_through.py</span></code>.
 First, we select a random backend framework to use for the examples, from the options
-<code class="docutils literal notranslate"><span class="pre">ivy.jax</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.tensorflow</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.torch</span></code>, <code class="docutils literal notranslate"><span class="pre">ivy.mxnet</span></code> or <code class="docutils literal notranslate"><span class="pre">ivy.numpy</span></code>,
+<code class="docutils literal notranslate"><span class="pre">jax</span></code>, <code class="docutils literal notranslate"><span class="pre">tensorflow</span></code>, <code class="docutils literal notranslate"><span class="pre">torch</span></code>, <code class="docutils literal notranslate"><span class="pre">mxnet</span></code> or <code class="docutils literal notranslate"><span class="pre">numpy</span></code>,
 and use this to set the ivy backend framework.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ivy</span>
-<span class="kn">from</span> <span class="nn">ivy_demo_utils.framework_utils</span> <span class="kn">import</span> <span class="n">choose_random_framework</span>
-<span class="n">ivy</span><span class="o">.</span><span class="n">set_framework</span><span class="p">(</span><span class="n">choose_random_framework</span><span class="p">())</span>
+<span class="n">fw</span> <span class="o">=</span> <span class="n">ivy</span><span class="o">.</span><span class="n">choose_random_backend</span><span class="p">()</span>
+<span class="n">ivy</span><span class="o">.</span><span class="n">set_backend</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We then select an environment to use and execute 250 random actions,
