@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym.core &mdash; Ivy Gym 1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="icon" type="image/png" href="https://github.com/unifyai/unifyai.github.io/blob/master/img/externally_linked/ivy_logo_only.png?raw=true">
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Ivy Gym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cartpole.html">Cartpole</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mountain_car.html">Mountain car</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pendulum.html">Pendulum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reacher.html">Reacher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../swimmer.html">Swimmer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ivy"">Ivy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mech"">Ivy mech</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../vision"">Ivy vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../robot"">Ivy robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym"">Ivy gym</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../memory"">Ivy memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../builder"">Ivy builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../models"">Ivy models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ecosystem"">Ivy ecosystem</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Ivy Gym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>gym.core</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym.core</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Core API for Environment, Wrapper, ActionWrapper, RewardWrapper and ObservationWrapper.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Generic</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">SupportsFloat</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">gym</span> <span class="k">import</span> <span class="n">spaces</span>
+<span class="kn">from</span> <span class="nn">gym.logger</span> <span class="k">import</span> <span class="n">deprecation</span><span class="p">,</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">gym.utils</span> <span class="k">import</span> <span class="n">seeding</span>
+<span class="kn">from</span> <span class="nn">gym.utils.seeding</span> <span class="k">import</span> <span class="n">RandomNumberGenerator</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">gym.envs.registration</span> <span class="k">import</span> <span class="n">EnvSpec</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;Gym minimally supports python 3.6 as the python foundation not longer supports the version, please update your version to 3.7+&quot;</span>
+    <span class="p">)</span>
+
+<span class="n">ObsType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;ObsType&quot;</span><span class="p">)</span>
+<span class="n">ActType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;ActType&quot;</span><span class="p">)</span>
+<span class="n">RenderFrame</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;RenderFrame&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># TODO: remove with gym 1.0</span>
+<span class="k">def</span> <span class="nf">_deprecate_mode</span><span class="p">(</span><span class="n">render_func</span><span class="p">):</span>  <span class="c1"># type: ignore</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper used for adding deprecation warning to the mode kwarg in the render method.&quot;&quot;&quot;</span>
+    <span class="n">render_return</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">RenderFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">RenderFrame</span><span class="p">]]]</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">render_return</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;mode&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">deprecation</span><span class="p">(</span>
+                <span class="s2">&quot;The argument mode in render method is deprecated; &quot;</span>
+                <span class="s2">&quot;use render_mode during environment initialization instead.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;See here for more information: https://www.gymlibrary.ml/content/api/&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;render_mode&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="n">deprecation</span><span class="p">(</span>
+                <span class="s2">&quot;You are calling render method, &quot;</span>
+                <span class="s2">&quot;but you didn&#39;t specified the argument render_mode at environment initialization. &quot;</span>
+                <span class="s2">&quot;To maintain backward compatibility, the environment will render in human mode.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;If you want to render in human mode, initialize the environment in this way: &quot;</span>
+                <span class="s2">&quot;gym.make(&#39;EnvName&#39;, render_mode=&#39;human&#39;) and don&#39;t call the render method.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;See here for more information: https://www.gymlibrary.ml/content/api/&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">render_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span>
+
+
+<span class="k">class</span> <span class="nc">Env</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="n">ActType</span><span class="p">]):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The main OpenAI Gym class.</span>
+
+<span class="sd">    It encapsulates an environment with arbitrary behind-the-scenes dynamics.</span>
+<span class="sd">    An environment can be partially or fully observed.</span>
+
+<span class="sd">    The main API methods that users of this class need to know are:</span>
+
+<span class="sd">    - :meth:`step` - Takes a step in the environment using an action returning the next observation, reward,</span>
+<span class="sd">      if the environment terminated and more information.</span>
+<span class="sd">    - :meth:`reset` - Resets the environment to an initial state, returning the initial observation.</span>
+<span class="sd">    - :meth:`render` - Renders the environment observation with modes depending on the output</span>
+<span class="sd">    - :meth:`close` - Closes the environment, important for rendering where pygame is imported</span>
+<span class="sd">    - :meth:`seed` - Seeds the environment&#39;s random number generator, :deprecated: in favor of `Env.reset(seed=seed)`.</span>
+
+<span class="sd">    And set the following attributes:</span>
+
+<span class="sd">    - :attr:`action_space` - The Space object corresponding to valid actions</span>
+<span class="sd">    - :attr:`observation_space` - The Space object corresponding to valid observations</span>
+<span class="sd">    - :attr:`reward_range` - A tuple corresponding to the minimum and maximum possible rewards</span>
+<span class="sd">    - :attr:`spec` - An environment spec that contains the information used to initialise the environment from `gym.make`</span>
+<span class="sd">    - :attr:`metadata` - The metadata of the environment, i.e. render modes</span>
+<span class="sd">    - :attr:`np_random` - The random number generator for the environment</span>
+
+<span class="sd">    Note: a default reward range set to :math:`(-\infty,+\infty)` already exists. Set it if you want a narrower range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Hook used for wrapping render method.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;render&quot;</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">_deprecate_mode</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">)[</span><span class="s2">&quot;render&quot;</span><span class="p">])</span>
+
+    <span class="c1"># Set this in SOME subclasses</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;render_modes&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="c1"># define render_mode if your environment supports rendering</span>
+    <span class="n">render_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">reward_range</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span>
+    <span class="n">spec</span><span class="p">:</span> <span class="s2">&quot;EnvSpec&quot;</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Set these in ALL subclasses</span>
+    <span class="n">action_space</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">[</span><span class="n">ActType</span><span class="p">]</span>
+    <span class="n">observation_space</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">[</span><span class="n">ObsType</span><span class="p">]</span>
+
+    <span class="c1"># Created</span>
+    <span class="n">_np_random</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RandomNumberGenerator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">np_random</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomNumberGenerator</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the environment&#39;s internal :attr:`_np_random` that if not set will initialise with a random seed.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_np_random</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_np_random</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">seeding</span><span class="o">.</span><span class="n">np_random</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_np_random</span>
+
+    <span class="nd">@np_random</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">np_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">RandomNumberGenerator</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_np_random</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">ActType</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span>
+    <span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Run one timestep of the environment&#39;s dynamics.</span>
+
+<span class="sd">        When end of episode is reached, you are responsible for calling :meth:`reset` to reset this environment&#39;s state.</span>
+<span class="sd">        Accepts an action and returns either a tuple `(observation, reward, terminated, truncated, info)`, or a tuple</span>
+<span class="sd">        (observation, reward, done, info). The latter is deprecated and will be removed in future versions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (ActType): an action provided by the agent</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            observation (object): this will be an element of the environment&#39;s :attr:`observation_space`.</span>
+<span class="sd">                This may, for instance, be a numpy array containing the positions and velocities of certain objects.</span>
+<span class="sd">            reward (float): The amount of reward returned as a result of taking the action.</span>
+<span class="sd">            terminated (bool): whether a `terminal state` (as defined under the MDP of the task) is reached.</span>
+<span class="sd">                In this case further step() calls could return undefined results.</span>
+<span class="sd">            truncated (bool): whether a truncation condition outside the scope of the MDP is satisfied.</span>
+<span class="sd">                Typically a timelimit, but could also be used to indicate agent physically going out of bounds.</span>
+<span class="sd">                Can be used to end the episode prematurely before a `terminal state` is reached.</span>
+<span class="sd">            info (dictionary): `info` contains auxiliary diagnostic information (helpful for debugging, learning, and logging).</span>
+<span class="sd">                This might, for instance, contain: metrics that describe the agent&#39;s performance state, variables that are</span>
+<span class="sd">                hidden from observations, or individual reward terms that are combined to produce the total reward.</span>
+<span class="sd">                It also can contain information that distinguishes truncation and termination, however this is deprecated in favour</span>
+<span class="sd">                of returning two booleans, and will be removed in a future version.</span>
+
+<span class="sd">            (deprecated)</span>
+<span class="sd">            done (bool): A boolean value for if the episode has ended, in which case further :meth:`step` calls will return undefined results.</span>
+<span class="sd">                A done signal may be emitted for different reasons: Maybe the task underlying the environment was solved successfully,</span>
+<span class="sd">                a certain timelimit was exceeded, or the physics simulation has entered an invalid state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">return_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Resets the environment to an initial state and returns the initial observation.</span>
+
+<span class="sd">        This method can reset the environment&#39;s random number generator(s) if ``seed`` is an integer or</span>
+<span class="sd">        if the environment has not yet initialized a random number generator.</span>
+<span class="sd">        If the environment already has a random number generator and :meth:`reset` is called with ``seed=None``,</span>
+<span class="sd">        the RNG should not be reset. Moreover, :meth:`reset` should (in the typical use case) be called with an</span>
+<span class="sd">        integer seed right after initialization and then never again.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seed (optional int): The seed that is used to initialize the environment&#39;s PRNG.</span>
+<span class="sd">                If the environment does not already have a PRNG and ``seed=None`` (the default option) is passed,</span>
+<span class="sd">                a seed will be chosen from some source of entropy (e.g. timestamp or /dev/urandom).</span>
+<span class="sd">                However, if the environment already has a PRNG and ``seed=None`` is passed, the PRNG will *not* be reset.</span>
+<span class="sd">                If you pass an integer, the PRNG will be reset even if it already exists.</span>
+<span class="sd">                Usually, you want to pass an integer *right after the environment has been initialized and then never again*.</span>
+<span class="sd">                Please refer to the minimal example above to see this paradigm in action.</span>
+<span class="sd">            return_info (bool): If true, return additional information along with initial observation.</span>
+<span class="sd">                This info should be analogous to the info returned in :meth:`step`</span>
+<span class="sd">            options (optional dict): Additional information to specify how the environment is reset (optional,</span>
+<span class="sd">                depending on the specific environment)</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            observation (object): Observation of the initial state. This will be an element of :attr:`observation_space`</span>
+<span class="sd">                (typically a numpy array) and is analogous to the observation returned by :meth:`step`.</span>
+<span class="sd">            info (optional dictionary): This will *only* be returned if ``return_info=True`` is passed.</span>
+<span class="sd">                It contains auxiliary information complementing ``observation``. This dictionary should be analogous to</span>
+<span class="sd">                the ``info`` returned by :meth:`step`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize the RNG if the seed is manually passed</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_np_random</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">seeding</span><span class="o">.</span><span class="n">np_random</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1"># TODO: remove kwarg mode with gym 1.0</span>
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">RenderFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">RenderFrame</span><span class="p">]]]:</span>
+        <span class="sd">&quot;&quot;&quot;Compute the render frames as specified by render_mode attribute during initialization of the environment.</span>
+
+<span class="sd">        The set of supported modes varies per environment. (And some</span>
+<span class="sd">        third-party environments may not support rendering at all.)</span>
+<span class="sd">        By convention, if render_mode is:</span>
+
+<span class="sd">        - None (default): no render is computed.</span>
+<span class="sd">        - human: render return None.</span>
+<span class="sd">          The environment is continuously rendered in the current display or terminal. Usually for human consumption.</span>
+<span class="sd">        - single_rgb_array: return a single frame representing the current state of the environment.</span>
+<span class="sd">          A frame is a numpy.ndarray with shape (x, y, 3) representing RGB values for an x-by-y pixel image.</span>
+<span class="sd">        - rgb_array: return a list of frames representing the states of the environment since the last reset.</span>
+<span class="sd">          Each frame is a numpy.ndarray with shape (x, y, 3), as with single_rgb_array.</span>
+<span class="sd">        - ansi: Return a list of strings (str) or StringIO.StringIO containing a</span>
+<span class="sd">          terminal-style text representation for each time step.</span>
+<span class="sd">          The text can include newlines and ANSI escape sequences (e.g. for colors).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Rendering computations is performed internally even if you don&#39;t call render().</span>
+<span class="sd">            To avoid this, you can set render_mode = None and, if the environment supports it,</span>
+<span class="sd">            call render() specifying the argument &#39;mode&#39;.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Make sure that your class&#39;s metadata &#39;render_modes&#39; key includes</span>
+<span class="sd">            the list of supported modes. It&#39;s recommended to call super()</span>
+<span class="sd">            in implementations to use the functionality of this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override close in your subclass to perform any necessary cleanup.</span>
+
+<span class="sd">        Environments will automatically :meth:`close()` themselves when</span>
+<span class="sd">        garbage collected or when the program exits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:deprecated: function that sets the seed for the environment&#39;s random number generator(s).</span>
+
+<span class="sd">        Use `env.reset(seed=seed)` as the new API for setting the seed of the environment.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Some environments use multiple pseudorandom number generators.</span>
+<span class="sd">            We want to capture all such seeds used in order to ensure that</span>
+<span class="sd">            there aren&#39;t accidental correlations between multiple generators.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seed(Optional int): The seed value for the random number generator</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            seeds (List[int]): Returns the list of seeds used in this environment&#39;s random</span>
+<span class="sd">              number generators. The first value in the list should be the</span>
+<span class="sd">              &quot;main&quot; seed, or the value which a reproducer should pass to</span>
+<span class="sd">              &#39;seed&#39;. Often, the main seed equals the provided &#39;seed&#39;, but</span>
+<span class="sd">              this won&#39;t be true `if seed=None`, for example.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deprecation</span><span class="p">(</span>
+            <span class="s2">&quot;Function `env.seed(seed)` is marked as deprecated and will be removed in the future. &quot;</span>
+            <span class="s2">&quot;Please use `env.reset(seed=seed)` instead.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_np_random</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">seeding</span><span class="o">.</span><span class="n">np_random</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">seed</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unwrapped</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Env&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the base non-wrapped environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Env: The base non-wrapped gym.Env instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a string of the environment with the spec id if specified.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;{type(self).__name__} instance&gt;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;{type(self).__name__}&lt;</span><span class="si">{self.spec.id}</span><span class="s2">&gt;&gt;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Support with-statement for the environment.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Support with-statement for the environment.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="c1"># propagate exception</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">class</span> <span class="nc">Wrapper</span><span class="p">(</span><span class="n">Env</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="n">ActType</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Wraps an environment to allow a modular transformation of the :meth:`step` and :meth:`reset` methods.</span>
+
+<span class="sd">    This class is the base class for all wrappers. The subclass could override</span>
+<span class="sd">    some methods to change the behavior of the original environment without touching the</span>
+<span class="sd">    original code.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Don&#39;t forget to call ``super().__init__(env)`` if the subclass overrides :meth:`__init__`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Env</span><span class="p">,</span> <span class="n">new_step_api</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wraps an environment to allow a modular transformation of the :meth:`step` and :meth:`reset` methods.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env: The environment to wrap</span>
+<span class="sd">            new_step_api: Whether the wrapper&#39;s step method will output in new or old step API</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observation_space</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_step_api</span> <span class="o">=</span> <span class="n">new_step_api</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_api</span><span class="p">:</span>
+            <span class="n">deprecation</span><span class="p">(</span>
+                <span class="s2">&quot;Initializing wrapper in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns an attribute with ``name``, unless ``name`` starts with an underscore.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;accessing private attribute &#39;</span><span class="si">{name}</span><span class="s2">&#39; is prohibited&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the environment specification.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">spec</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the class name of the wrapper.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">[</span><span class="n">ActType</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the action space of the environment.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span>
+
+    <span class="nd">@action_space</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span> <span class="o">=</span> <span class="n">space</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the observation space of the environment.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observation_space</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observation_space</span>
+
+    <span class="nd">@observation_space</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observation_space</span> <span class="o">=</span> <span class="n">space</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">reward_range</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return the reward range of the environment.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reward_range</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward_range</span>
+
+    <span class="nd">@reward_range</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">reward_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reward_range</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the environment metadata.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">metadata</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span>
+
+    <span class="nd">@metadata</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">render_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the environment render_mode.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">render_mode</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">np_random</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomNumberGenerator</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the environment np_random.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span>
+
+    <span class="nd">@np_random</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">np_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_np_random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="s2">&quot;Can&#39;t access `_np_random` of a wrapper, use `.unwrapped._np_random` or `.np_random`.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">ActType</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span>
+    <span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Steps through the environment with action.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">gym.utils.step_api_compatibility</span> <span class="k">import</span> <span class="p">(</span>  <span class="c1"># avoid circular import</span>
+            <span class="n">step_api_compatibility</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">step_api_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_api</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Resets the environment with kwargs.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">RenderFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">RenderFrame</span><span class="p">]]]:</span>
+        <span class="sd">&quot;&quot;&quot;Renders the environment.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Closes the environment.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Seeds the environment.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the wrapper name and the unwrapped environment string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;{type(self).__name__}</span><span class="si">{self.env}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the string representation of the wrapper.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unwrapped</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Env</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the base environment of the wrapper.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span>
+
+
+<span class="k">class</span> <span class="nc">ObservationWrapper</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Superclass of wrappers that can modify observations using :meth:`observation` for :meth:`reset` and :meth:`step`.</span>
+
+<span class="sd">    If you would like to apply a function to the observation that is returned by the base environment before</span>
+<span class="sd">    passing it to learning code, you can simply inherit from :class:`ObservationWrapper` and overwrite the method</span>
+<span class="sd">    :meth:`observation` to implement that transformation. The transformation defined in that method must be</span>
+<span class="sd">    defined on the base environment’s observation space. However, it may take values in a different space.</span>
+<span class="sd">    In that case, you need to specify the new observation space of the wrapper by setting :attr:`self.observation_space`</span>
+<span class="sd">    in the :meth:`__init__` method of your wrapper.</span>
+
+<span class="sd">    For example, you might have a 2D navigation task where the environment returns dictionaries as observations with</span>
+<span class="sd">    keys ``&quot;agent_position&quot;`` and ``&quot;target_position&quot;``. A common thing to do might be to throw away some degrees of</span>
+<span class="sd">    freedom and only consider the position of the target relative to the agent, i.e.</span>
+<span class="sd">    ``observation[&quot;target_position&quot;] - observation[&quot;agent_position&quot;]``. For this, you could implement an</span>
+<span class="sd">    observation wrapper like this::</span>
+
+<span class="sd">        class RelativePosition(gym.ObservationWrapper):</span>
+<span class="sd">            def __init__(self, env):</span>
+<span class="sd">                super().__init__(env)</span>
+<span class="sd">                self.observation_space = Box(shape=(2,), low=-np.inf, high=np.inf)</span>
+
+<span class="sd">            def observation(self, obs):</span>
+<span class="sd">                return obs[&quot;target&quot;] - obs[&quot;agent&quot;]</span>
+
+<span class="sd">    Among others, Gym provides the observation wrapper :class:`TimeAwareObservation`, which adds information about the</span>
+<span class="sd">    index of the timestep to the observation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resets the environment, returning a modified observation using :meth:`self.observation`.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;return_info&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="p">(</span><span class="n">obs</span><span class="p">),</span> <span class="n">info</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a modified observation using :meth:`self.observation` after calling :meth:`env.step`.&quot;&quot;&quot;</span>
+        <span class="n">step_returns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">step_returns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">step_returns</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="p">(</span><span class="n">observation</span><span class="p">),</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">step_returns</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="p">(</span><span class="n">observation</span><span class="p">),</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span>
+
+    <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a modified observation.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">class</span> <span class="nc">RewardWrapper</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Superclass of wrappers that can modify the returning reward from a step.</span>
+
+<span class="sd">    If you would like to apply a function to the reward that is returned by the base environment before</span>
+<span class="sd">    passing it to learning code, you can simply inherit from :class:`RewardWrapper` and overwrite the method</span>
+<span class="sd">    :meth:`reward` to implement that transformation.</span>
+<span class="sd">    This transformation might change the reward range; to specify the reward range of your wrapper,</span>
+<span class="sd">    you can simply define :attr:`self.reward_range` in :meth:`__init__`.</span>
+
+<span class="sd">    Let us look at an example: Sometimes (especially when we do not have control over the reward</span>
+<span class="sd">    because it is intrinsic), we want to clip the reward to a range to gain some numerical stability.</span>
+<span class="sd">    To do that, we could, for instance, implement the following wrapper::</span>
+
+<span class="sd">        class ClipReward(gym.RewardWrapper):</span>
+<span class="sd">            def __init__(self, env, min_reward, max_reward):</span>
+<span class="sd">                super().__init__(env)</span>
+<span class="sd">                self.min_reward = min_reward</span>
+<span class="sd">                self.max_reward = max_reward</span>
+<span class="sd">                self.reward_range = (min_reward, max_reward)</span>
+
+<span class="sd">            def reward(self, reward):</span>
+<span class="sd">                return np.clip(reward, self.min_reward, self.max_reward)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Modifies the reward using :meth:`self.reward` after the environment :meth:`env.step`.&quot;&quot;&quot;</span>
+        <span class="n">step_returns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">step_returns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">step_returns</span>
+            <span class="k">return</span> <span class="n">observation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">(</span><span class="n">reward</span><span class="p">),</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">step_returns</span>
+            <span class="k">return</span> <span class="n">observation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">(</span><span class="n">reward</span><span class="p">),</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span>
+
+    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a modified ``reward``.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">class</span> <span class="nc">ActionWrapper</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Superclass of wrappers that can modify the action before :meth:`env.step`.</span>
+
+<span class="sd">    If you would like to apply a function to the action before passing it to the base environment,</span>
+<span class="sd">    you can simply inherit from :class:`ActionWrapper` and overwrite the method :meth:`action` to implement</span>
+<span class="sd">    that transformation. The transformation defined in that method must take values in the base environment’s</span>
+<span class="sd">    action space. However, its domain might differ from the original action space.</span>
+<span class="sd">    In that case, you need to specify the new action space of the wrapper by setting :attr:`self.action_space` in</span>
+<span class="sd">    the :meth:`__init__` method of your wrapper.</span>
+
+<span class="sd">    Let’s say you have an environment with action space of type :class:`gym.spaces.Box`, but you would only like</span>
+<span class="sd">    to use a finite subset of actions. Then, you might want to implement the following wrapper::</span>
+
+<span class="sd">        class DiscreteActions(gym.ActionWrapper):</span>
+<span class="sd">            def __init__(self, env, disc_to_cont):</span>
+<span class="sd">                super().__init__(env)</span>
+<span class="sd">                self.disc_to_cont = disc_to_cont</span>
+<span class="sd">                self.action_space = Discrete(len(disc_to_cont))</span>
+
+<span class="sd">            def action(self, act):</span>
+<span class="sd">                return self.disc_to_cont[act]</span>
+
+<span class="sd">        if __name__ == &quot;__main__&quot;:</span>
+<span class="sd">            env = gym.make(&quot;LunarLanderContinuous-v2&quot;)</span>
+<span class="sd">            wrapped_env = DiscreteActions(env, [np.array([1,0]), np.array([-1,0]),</span>
+<span class="sd">                                                np.array([0,1]), np.array([0,-1])])</span>
+<span class="sd">            print(wrapped_env.action_space)         #Discrete(4)</span>
+
+
+<span class="sd">    Among others, Gym provides the action wrappers :class:`ClipAction` and :class:`RescaleAction`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Runs the environment :meth:`env.step` using the modified ``action`` from :meth:`self.action`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a modified action before :meth:`env.step` is called.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">reverse_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a reversed ``action``.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Ivy Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -88,8 +88,146 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="swimmer">
-<h1>Swimmer<a class="headerlink" href="#swimmer" title="Permalink to this heading"></a></h1>
+  <section id="module-ivy_gym.swimmer">
+<span id="swimmer"></span><h1>Swimmer<a class="headerlink" href="#module-ivy_gym.swimmer" title="Permalink to this heading"></a></h1>
+<p>Path finding task.
+A fish needs to reach a goal location while avoiding urchins.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname">ivy_gym.</span></span><span class="sig-name descname"><span class="pre">Swimmer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_urchins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Env</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_urchins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Swimmer environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_urchins</strong> – Number of urchins.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.action_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.close" title="Permalink to this definition"></a></dt>
+<dd><p>Close environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.get_observation">
+<span class="sig-name descname"><span class="pre">get_observation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.get_observation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.get_observation" title="Permalink to this definition"></a></dt>
+<dd><p>Get observation from environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>ret</em> – observation array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.get_reward">
+<span class="sig-name descname"><span class="pre">get_reward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.get_reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.get_reward" title="Permalink to this definition"></a></dt>
+<dd><p>Get reward based on current state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>ret</em> – Reward array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.get_state" title="Permalink to this definition"></a></dt>
+<dd><p>Get current state in environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>ret</em> – Urchin xys, xy, xy velocity, and goal xy arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'render.modes':</span> <span class="pre">['human',</span> <span class="pre">'rgb_array'],</span> <span class="pre">'video.frames_per_second':</span> <span class="pre">30}</span></em><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.metadata" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.observation_space">
+<span class="sig-name descname"><span class="pre">observation_space</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Space</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.observation_space" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">RenderFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">RenderFrame</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.render" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the render frames as specified by render_mode attribute during initialization of the environment.</p>
+<p>The set of supported modes varies per environment. (And some
+third-party environments may not support rendering at all.)
+By convention, if render_mode is:</p>
+<ul class="simple">
+<li><p>None (default): no render is computed.</p></li>
+<li><p>human: render return None.
+The environment is continuously rendered in the current display or terminal. Usually for human consumption.</p></li>
+<li><p>single_rgb_array: return a single frame representing the current state of the environment.
+A frame is a numpy.ndarray with shape (x, y, 3) representing RGB values for an x-by-y pixel image.</p></li>
+<li><p>rgb_array: return a list of frames representing the states of the environment since the last reset.
+Each frame is a numpy.ndarray with shape (x, y, 3), as with single_rgb_array.</p></li>
+<li><p>ansi: Return a list of strings (str) or StringIO.StringIO containing a
+terminal-style text representation for each time step.
+The text can include newlines and ANSI escape sequences (e.g. for colors).</p></li>
+</ul>
+<dl class="simple">
+<dt>Note:</dt><dd><p>Rendering computations is performed internally even if you don’t call render().
+To avoid this, you can set render_mode = None and, if the environment supports it,
+call render() specifying the argument ‘mode’.</p>
+</dd>
+<dt>Note:</dt><dd><p>Make sure that your class’s metadata ‘render_modes’ key includes
+the list of supported modes. It’s recommended to call super()
+in implementations to use the functionality of this method.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">RenderFrame</span></code>), <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">RenderFrame</span></code>)]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.reset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.set_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.set_state" title="Permalink to this definition"></a></dt>
+<dd><p>Set current state in environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> – tuple of urchin xys, xy, xy velocity, and goal xy</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>ret</em> – observation array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ivy_gym.swimmer.Swimmer.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ivy_gym/swimmer.html#Swimmer.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ivy_gym.swimmer.Swimmer.step" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <div class="toctree-wrapper compound">
 </div>
 </section>
