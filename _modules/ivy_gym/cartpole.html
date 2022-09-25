@@ -208,7 +208,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle_vel</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_observation</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reward</span><span class="p">(),</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{}</span></div>
 
-    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPole.render"><a class="viewcode-back" href="../../cartpole/CartPole.html#ivy_gym.cartpole.CartPole.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Renders the environment.</span>
 <span class="sd">        The set of supported modes varies per environment. (And some</span>
 <span class="sd">        environments do not support rendering at all.) By convention,</span>
@@ -299,7 +299,7 @@
         <span class="n">rew</span> <span class="o">=</span> <span class="n">ivy</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_reward</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pole_geom</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rew</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">return_rgb_array</span><span class="o">=</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">return_rgb_array</span><span class="o">=</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CartPole.close"><a class="viewcode-back" href="../../cartpole/CartPole.html#ivy_gym.cartpole.CartPole.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Close environment.&quot;&quot;&quot;</span>
